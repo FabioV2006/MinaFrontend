@@ -5,59 +5,53 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { PacienteService } from '../../services/paciente.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-
-export interface Paciente {
-  id: number;
-  nombre: string;
-  genero: string;
-  fechaNacimiento: string;
-  diagnostico: string;
-}
-
+import { Mina, MinaService } from '../../services/mina.service';
 
 @Component({
-  selector: 'app-pacientes',
+  selector: 'app-vilca-listar', // C06: Prefijo "vilca"
   standalone: true,
   imports: [
-    CommonModule, 
-    MatTableModule, 
-    MatPaginatorModule, 
+    CommonModule,
+    MatTableModule,
+    MatPaginatorModule,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     MatIconModule
   ],
-  templateUrl: './pacientes.component.html',
-  styleUrl: './pacientes.component.css'
+  templateUrl: './vilca-listar.component.html',
+  styleUrl: './vilca-listar.component.css'
 })
-export class PacientesComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'nombre', 'genero', 'fechaNacimiento', 'diagnostico'];
-  dataSource = new MatTableDataSource<Paciente>([]);
+export class VilcaListarComponent implements OnInit { // Export class para evitar TS2305
+  // Mostrar solo 3 atributos de la entidad Mina: Código, Nombre, Tipo (C02 - Punto 2)
+  displayedColumns: string[] = ['codigo', 'nombre', 'tipo'];
+  dataSource = new MatTableDataSource<Mina>([]);
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private pacienteService: PacienteService, private router: Router) { }
+  constructor(private minaService: MinaService, private router: Router) { }
 
   ngOnInit(): void {
-    this.pacienteService.getPacientes().subscribe({
+    this.minaService.getMinas().subscribe({
       next: (data) => {
         this.dataSource.data = data;
         this.dataSource.paginator = this.paginator;
       },
-      error: (err) => console.error('Error al obtener pacientes', err)
+      error: (err) => console.error('Error al obtener minas', err)
     });
   }
-aplicarFiltro(event: Event) {
+
+  aplicarFiltro(event: Event) {
     const filtro = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filtro.trim().toLowerCase();
   }
-  irARegistro() {
-    this.router.navigate(['/registro']);
-  }
 
+  irANuevoRegistro() {
+    // Redirigir a la ruta de registro /vilca/nuevo (C03 - Punto 4)
+    this.router.navigate(['/vilca/nuevo']);
+  }
 }

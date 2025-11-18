@@ -1,0 +1,13 @@
+.landing-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+}
+
+.landing-card {
+  padding: 24px;
+  text-align: center;
+  width: 400px;
+}
